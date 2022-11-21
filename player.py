@@ -13,7 +13,7 @@ COLOR = "#888888"
 JUMP_POWER = 10
 GRAVITY = 0.35  # Сила, которая будет тянуть нас вниз
 ANIMATION_DELAY = 0.1  # скорость смены кадров
-ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
+ICON_DIR = os.path.dirname(__file__)
 
 ANIMATION_RIGHT = [('%s/mario/r1.png' % ICON_DIR),
                    ('%s/mario/r2.png' % ICON_DIR),
@@ -34,26 +34,25 @@ ANIMATION_STAY = [('%s/mario/0.png' % ICON_DIR, 0.1)]
 class Player(sprite.Sprite):
     def __init__(self, x, y):
         sprite.Sprite.__init__(self)
-        self.hard = 1
-        self.xvel = 0  # скорость перемещения. 0 - стоять на месте
-        self.startX = x  # Начальная позиция Х, пригодится когда будем переигрывать уровень
+        self.xvel = 0
+        self.startX = x
         self.startY = y
-        self.yvel = 0  # скорость вертикального перемещения
-        self.onGround = False  # На земле ли я?
+        self.yvel = 0
+        self.onGround = False
         self.image = Surface((WIDTH, HEIGHT))
         self.image.fill(Color(COLOR))
-        self.rect = Rect(x, y, WIDTH, HEIGHT)  # прямоугольный объект
-        self.image.set_colorkey(Color(COLOR))  # делаем фон прозрачным
+        self.rect = Rect(x, y, WIDTH, HEIGHT)
+        self.image.set_colorkey(Color(COLOR))
         self.count = 0
         self.count_mine = False
         self.chet = 0
-        #        Анимация движения вправо
+        # Анимация движения вправо
         boltAnim = []
         for anim in ANIMATION_RIGHT:
             boltAnim.append((anim, ANIMATION_DELAY))
         self.boltAnimRight = pyganim.PygAnimation(boltAnim)
         self.boltAnimRight.play()
-        #        Анимация движения влево
+        # Анимация движения влево
         boltAnim = []
         for anim in ANIMATION_LEFT:
             boltAnim.append((anim, ANIMATION_DELAY))
@@ -62,7 +61,7 @@ class Player(sprite.Sprite):
 
         self.boltAnimStay = pyganim.PygAnimation(ANIMATION_STAY)
         self.boltAnimStay.play()
-        self.boltAnimStay.blit(self.image, (0, 0))  # По-умолчанию, стоим
+        self.boltAnimStay.blit(self.image, (0, 0))
 
         self.boltAnimJumpLeft = pyganim.PygAnimation(ANIMATION_JUMP_LEFT)
         self.boltAnimJumpLeft.play()
@@ -74,6 +73,7 @@ class Player(sprite.Sprite):
         self.boltAnimJump.play()
 
         self.index_pr = 0
+        self.index_mn = 0
 
     def update(self, left, right, up, platforms, prizes, mines):
         self.chet += 1
@@ -86,7 +86,7 @@ class Player(sprite.Sprite):
         if left:
             self.xvel = -MOVE_SPEED  # Лево = x- n
             self.image.fill(Color(COLOR))
-            if up:  # для прыжка влево есть отдельная анимация
+            if up:
                 self.boltAnimJumpLeft.blit(self.image, (0, 0))
             else:
                 self.boltAnimLeft.blit(self.image, (0, 0))
@@ -108,11 +108,11 @@ class Player(sprite.Sprite):
         if not self.onGround:
             self.yvel += GRAVITY
 
-        self.onGround = False;  # Мы не знаем, когда мы на земле((
+        self.onGround = False;
         self.rect.y += self.yvel
         self.collide(0, self.yvel, platforms)
 
-        self.rect.x += self.xvel  # переносим свои положение на xvel
+        self.rect.x += self.xvel
         self.collide(self.xvel, 0, platforms)
 
         self.crossPr(self.xvel, self.yvel, prizes)
@@ -123,37 +123,30 @@ class Player(sprite.Sprite):
             if sprite.collide_rect(self, pr):
                 self.index_pr = prizes.index(pr)
                 self.count += 1
-                """self.chet = +1
-                if self.chet > 2:
-                    self.count += 1
-                    self.chet = 0"""
+
     def crossMn(self, xvel, yvel, mines):
         for mn in mines:
             if sprite.collide_rect(self, mn):
-                self.count_mine = True
-                """self.chet = +1
-                if self.chet > 2:
-                    self.count += 1
-                    self.chet = 0"""
-
+                self.index_mn = mines.index(mn)
+                self.count_mine += 1
 
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if sprite.collide_rect(self, p):  # если есть пересечение платформы с игроком
 
                 if xvel > 0:  # если движется вправо
-                    self.rect.right = p.rect.left  # то не движется вправо
+                    self.rect.right = p.rect.left
 
                 if xvel < 0:  # если движется влево
-                    self.rect.left = p.rect.right  # то не движется влево
+                    self.rect.left = p.rect.right
 
                 if yvel > 0:  # если падает вниз
                     self.rect.bottom = p.rect.top  # то не падает вниз
-                    self.onGround = True  # и становится на что-то твердое
-                    self.yvel = 0  # и энергия падения пропадает
+                    self.onGround = True
+                    self.yvel = 0
 
                 if yvel < 0:  # если движется вверх
-                    self.rect.top = p.rect.bottom  # то не движется вверх
-                    self.yvel = 0  # и энергия прыжка пропадает
+                    self.rect.top = p.rect.bottom
+                    self.yvel = 0
 
 
