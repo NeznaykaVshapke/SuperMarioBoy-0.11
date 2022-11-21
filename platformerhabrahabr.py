@@ -110,7 +110,7 @@ level3 = [
         "-              ----              -",
         "-                                -",
         "-                                -",
-        "                          ----   -",
+        "-                         ----   -",
         "-                                -",
         "-                                -",
         "-                                -",
@@ -120,8 +120,6 @@ level3 = [
 level_array = [level1, level2, level3]
 
 pygame.display.update()
-file = open("tablerecords.txt", "w")
-file.write("hello world")
 level1_prizes = [[252, 418], [430, 98], [787, 65]]
 level2_prizes = [[60, 513], [437, 96], [830, 66]]
 level3_prizes = [[550, 417], [720, 224], [280, 322]]
@@ -279,7 +277,6 @@ def start_the_game():
             screen.blit(text31, (50, 140))
         if hero.count == 2:
             hero.kill()
-            file.write(str(hero.count))
             text2 = f1.render('Вы прошли уровень ' + str(1), 1, (180, 0, 0), (10,10,100))
             screen.blit(text2, (50, 300))
             screen.blit(text3, (50, 100))
