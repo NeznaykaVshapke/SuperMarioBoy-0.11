@@ -1,3 +1,1 @@
-SuperMarioBoy
-=============
-http://habrahabr.ru/post/193888/
+Для игры необходимо запустить platformerhabrahabr и наслаждаться сей невероятной игрою!
